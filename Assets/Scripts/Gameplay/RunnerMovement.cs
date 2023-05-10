@@ -17,6 +17,7 @@ public class RunnerMovement : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent <Animator>();
+        // anim.SetBool("isRunning", true);
     }
 
     void Update()
@@ -27,12 +28,22 @@ public class RunnerMovement : MonoBehaviour
         if (jumpInput && isGrounded())
         {
             // rb.AddForce(transform.up * jumpFactor, ForceMode2D.Impulse);
+            anim.SetBool("isJumping", true);
             rb.velocity = new Vector2(rb.velocity.x, jumpVel);
         }
 
         if (jumpInputReleased && rb.velocity.y > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / jumpReleaseMod);
+        } else
+        {
+            anim.SetBool("isFalling", true);
+        }
+
+        if (rb.velocity.y == 0)
+        {
+            anim.SetBool("isFalling", false);
+            anim.SetBool("isJumping", false);
         }
     }
 
