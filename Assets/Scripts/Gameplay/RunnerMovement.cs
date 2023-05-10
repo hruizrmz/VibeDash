@@ -46,11 +46,9 @@ public class RunnerMovement : MonoBehaviour
     {
         if (Physics2D.BoxCast(transform.position, boxSize, 0, -transform.up, maxGroundDistance, groundMask))
         {
-            Debug.Log("grounded");
             return true;
         } else
         {
-            Debug.Log("not grounded");
             return false;
         }
     }
