@@ -40,7 +40,7 @@ public class RunnerMovement : MonoBehaviour
             anim.SetBool("isFalling", true);
         }
 
-        if (rb.velocity.y == 0)
+        if (rb.velocity.y <= 0 && isGrounded())
         {
             anim.SetBool("isFalling", false);
             anim.SetBool("isJumping", false);
