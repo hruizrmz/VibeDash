@@ -44,15 +44,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Hold"",
-                    ""type"": ""Button"",
-                    ""id"": ""d59e2f71-8194-438c-8c4e-69fbd324a8ad"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -64,17 +55,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Touch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""66d17921-f4d9-4fba-a12c-919aef44d66e"",
-                    ""path"": ""<Touchscreen>/Press"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Hold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -98,7 +78,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Touch = asset.FindActionMap("Touch", throwIfNotFound: true);
         m_Touch_PrimaryPosition = m_Touch.FindAction("PrimaryPosition", throwIfNotFound: true);
         m_Touch_Touch = m_Touch.FindAction("Touch", throwIfNotFound: true);
-        m_Touch_Hold = m_Touch.FindAction("Hold", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -162,14 +141,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<ITouchActions> m_TouchActionsCallbackInterfaces = new List<ITouchActions>();
     private readonly InputAction m_Touch_PrimaryPosition;
     private readonly InputAction m_Touch_Touch;
-    private readonly InputAction m_Touch_Hold;
     public struct TouchActions
     {
         private @PlayerControls m_Wrapper;
         public TouchActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @PrimaryPosition => m_Wrapper.m_Touch_PrimaryPosition;
         public InputAction @Touch => m_Wrapper.m_Touch_Touch;
-        public InputAction @Hold => m_Wrapper.m_Touch_Hold;
         public InputActionMap Get() { return m_Wrapper.m_Touch; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -185,9 +162,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Touch.started += instance.OnTouch;
             @Touch.performed += instance.OnTouch;
             @Touch.canceled += instance.OnTouch;
-            @Hold.started += instance.OnHold;
-            @Hold.performed += instance.OnHold;
-            @Hold.canceled += instance.OnHold;
         }
 
         private void UnregisterCallbacks(ITouchActions instance)
@@ -198,9 +172,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Touch.started -= instance.OnTouch;
             @Touch.performed -= instance.OnTouch;
             @Touch.canceled -= instance.OnTouch;
-            @Hold.started -= instance.OnHold;
-            @Hold.performed -= instance.OnHold;
-            @Hold.canceled -= instance.OnHold;
         }
 
         public void RemoveCallbacks(ITouchActions instance)
@@ -222,6 +193,5 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnPrimaryPosition(InputAction.CallbackContext context);
         void OnTouch(InputAction.CallbackContext context);
-        void OnHold(InputAction.CallbackContext context);
     }
 }

@@ -7,14 +7,14 @@ public class Ground : MonoBehaviour
 {
     private bool isGameRunning;
     private float scrollSpeed = 70;
-    [SerializeField] public float xSpawn;
-    [SerializeField] public float xTrigger;
-    [SerializeField] public float xDestroy;
+    [SerializeField] private float xSpawn;
+    [SerializeField] private float xTrigger;
+    [SerializeField] private float xDestroy;
 
     public float groundHeight;
     private BoxCollider2D col;
 
-    bool calledGround = false;
+    private bool calledGround = false;
 
     private void OnEnable()
     {

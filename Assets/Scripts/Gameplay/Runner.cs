@@ -3,17 +3,16 @@ using UnityEngine;
 public class Runner : MonoBehaviour
 {
     public bool jumpInput;
-    public float jumpVel = 10f;
-    public float jumpReleaseMod = 2f;
-
-    public float maxGroundDistance = 0.05f;
+    [SerializeField] private float jumpVel = 8f;
+    [SerializeField] private float jumpReleaseMod = 1f;
+    [SerializeField] private float maxGroundDistance = 1.1f;
+    
+    [SerializeField] private Vector3 boxSize;
+    [SerializeField] private LayerMask groundMask;
     private float feetPosition;
-    public Vector3 boxSize;
-
-    public float outOfBounds;
-
-    public LayerMask groundMask;
     private Ground ground;
+
+    [SerializeField] private float outOfBounds;
 
     private Rigidbody2D rb;
     private Animator anim;
