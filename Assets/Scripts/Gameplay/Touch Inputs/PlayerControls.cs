@@ -59,7 +59,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9191f63c-aa3d-4943-8404-e81b91e55717"",
-                    ""path"": ""<Touchscreen>/Press"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",

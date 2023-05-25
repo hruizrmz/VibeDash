@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private GameObject playerObject;
     private Runner player;
 
     private PlayerInput playerInput;
@@ -13,12 +12,12 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Runner>();
+
         playerInput = GetComponent<PlayerInput>();
         touchAction = playerInput.actions["Touch"];
         holdAction = playerInput.actions["Hold"];
         primaryPositionAction = playerInput.actions["PrimaryPosition"];
-
-        player = playerObject.GetComponent<Runner>();
     }
 
     private void OnEnable()
