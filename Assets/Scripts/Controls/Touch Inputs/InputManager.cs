@@ -5,6 +5,9 @@ public class InputManager : MonoBehaviour
 {
     private Runner player;
 
+    [SerializeField] private GameObject touchIndicator;
+    private Animator touchAnimator;
+
     private PlayerInput playerInput;
     private InputAction touchAction;
     private InputAction primaryPositionAction;
@@ -19,6 +22,7 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Runner>();
+        touchAnimator = touchIndicator.GetComponent<Animator>();
 
         playerInput = GetComponent<PlayerInput>();
         touchAction = playerInput.actions["Touch"];
@@ -43,6 +47,9 @@ public class InputManager : MonoBehaviour
         startTouchTime = Time.time;
         startTouchPos = Camera.main.ScreenToWorldPoint(primaryPositionAction.ReadValue<Vector2>());
         startTouchPos.z = 0;
+        touchIndicator.transform.position = startTouchPos;
+        touchAnimator.SetTrigger("screenTouched");
+        Debug.Log("started "+startTouchPos);
     }
 
     private void TouchEnded(InputAction.CallbackContext context)
