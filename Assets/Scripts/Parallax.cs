@@ -4,25 +4,31 @@ using UnityEngine;
 
 public class Parallax : MonoBehaviour
 {
-    private bool isGameRunning;
+    private bool isGameRunning = false;
     private float scrollSpeed = 50;
     [SerializeField] private float spriteDepth = 1;
     [SerializeField] private float spawnX = 1;
 
+    #region Events
     private void OnEnable()
     {
+        GameManager.StartGame += StartBG;
         GameManager.StopGame += StopBG;
     }
-
     private void OnDisable()
     {
+        GameManager.StartGame -= StartBG;
         GameManager.StopGame -= StopBG;
     }
-
-    private void Start()
+    private void StartBG()
     {
         isGameRunning = true;
     }
+    private void StopBG()
+    {
+        isGameRunning = false;
+    }
+    #endregion
 
     private void Update()
     {
@@ -34,10 +40,5 @@ public class Parallax : MonoBehaviour
             if (pos.x <= -spawnX) pos.x = spawnX;
             transform.position = pos;
         }
-    }
-
-    private void StopBG()
-    {
-        isGameRunning = false;
     }
 }

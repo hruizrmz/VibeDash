@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    private Runner player;
+    public static event Action TapStarted;
+    public static event Action TapEnded;
 
     [SerializeField] private GameObject touchIndicator;
     private Animator touchAnimator;
@@ -21,9 +23,7 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Runner>();
         touchAnimator = touchIndicator.GetComponent<Animator>();
-
         playerInput = GetComponent<PlayerInput>();
         touchAction = playerInput.actions["Touch"];
         primaryPositionAction = playerInput.actions["PrimaryPosition"];
@@ -43,17 +43,17 @@ public class InputManager : MonoBehaviour
 
     private void TouchStarted(InputAction.CallbackContext context)
     {
-        player.jumpInput = true;
+        InputManager.TapStarted?.Invoke();
         startTouchTime = Time.time;
         startTouchPos = Camera.main.ScreenToWorldPoint(primaryPositionAction.ReadValue<Vector2>());
         startTouchPos.z = 0;
         touchIndicator.transform.position = startTouchPos;
         touchAnimator.SetTrigger("screenTouched");
-        Debug.Log("started "+startTouchPos);
     }
 
     private void TouchEnded(InputAction.CallbackContext context)
     {
+        InputManager.TapEnded?.Invoke();
         endTouchTime = Time.time;
         endTouchPos = Camera.main.ScreenToWorldPoint(primaryPositionAction.ReadValue<Vector2>());
         endTouchPos.z = 0;

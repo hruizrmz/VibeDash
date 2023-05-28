@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static event Action StartGame;
     public static event Action StopGame;
-    public GameObject player;
+    private bool gameStarted = false;
+
+    private GameObject player;
 
     private void Awake()
     {
@@ -13,7 +16,16 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (player == null) GameManager.StopGame?.Invoke();
+        if (!gameStarted)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                gameStarted = true;
+                GameManager.StartGame?.Invoke();
+            }
+        } else
+        {
+            if (player == null) GameManager.StopGame?.Invoke();
+        }
     }
-
 }

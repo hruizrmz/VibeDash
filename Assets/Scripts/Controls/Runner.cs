@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Runner : MonoBehaviour
 {
-    public bool jumpInput;
+    private bool jumpInput;
     [SerializeField] private float jumpVel = 8f;
     [SerializeField] private float jumpReleaseMod = 1f;
     [SerializeField] private float maxGroundDistance = 1.1f;
@@ -17,11 +17,33 @@ public class Runner : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
 
+    #region Events
+    private void OnEnable()
+    {
+        GameManager.StartGame += StartRunner;
+        NoteObject.JumpNote += PlayerJump;
+    }
+    private void OnDisable()
+    {
+        GameManager.StartGame -= StartRunner;
+        NoteObject.JumpNote -= PlayerJump;
+    }
+    private void StartRunner()
+    {
+        anim.SetBool("isRunning", true);
+    }
+    private void PlayerJump()
+    {
+        jumpInput = true;
+    }
+
+    #endregion
+
     private void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent <Animator>();
-        // anim.SetBool("isIdle", true);
+        anim.SetBool("isRunning", false);
     }
 
     void Update()

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Ground : MonoBehaviour
 {
-    private bool isGameRunning;
+    public bool isGameRunning;
     private float scrollSpeed = 70;
     [SerializeField] private float xSpawn;
     [SerializeField] private float xTrigger;
@@ -16,24 +16,36 @@ public class Ground : MonoBehaviour
 
     private bool calledGround = false;
 
+    #region Events
     private void OnEnable()
     {
+        GameManager.StartGame += StartGround;
         GameManager.StopGame += StopGround;
     }
-
     private void OnDisable()
     {
+        GameManager.StartGame -= StartGround;
         GameManager.StopGame -= StopGround;
     }
+    private void StartGround()
+    {
+        isGameRunning = true;
+    }
+    private void StopGround()
+    {
+        isGameRunning = false;
+    }
+    #endregion
 
     private void Awake()
     {
-        isGameRunning = true;
+        if (transform.position.x == xSpawn) isGameRunning = true;
+
         col = GetComponent<BoxCollider2D>();
         groundHeight = transform.position.y + col.bounds.extents.y;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (isGameRunning)
         {
@@ -60,12 +72,7 @@ public class Ground : MonoBehaviour
         calledGround = true;
         GameObject gr = Instantiate(gameObject);
         gr.name = this.name;
-        Vector2 pos = new(xSpawn,transform.position.y);
+        Vector2 pos = new(xSpawn, transform.position.y);
         gr.transform.position = pos;
-    }
-
-    private void StopGround()
-    {
-        isGameRunning = false;
     }
 }
