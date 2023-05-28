@@ -6,6 +6,7 @@ public class NoteObject : MonoBehaviour
     private bool isThereTouch;
     private bool canBeTapped;
 
+    private bool wasNoteHit = false;
     public static event Action JumpNote;
 
     #region Events
@@ -34,6 +35,8 @@ public class NoteObject : MonoBehaviour
         if (isThereTouch && canBeTapped)
         {
             NoteObject.JumpNote?.Invoke();
+            GameManager.instance.NoteHit();
+            wasNoteHit = true;
             gameObject.SetActive(false);
         }
     }
@@ -51,6 +54,7 @@ public class NoteObject : MonoBehaviour
         if (collision.tag == "Activator")
         {
             canBeTapped = false;
+            if (!wasNoteHit) GameManager.instance.NoteMissed(); // if the note exited with no tap
         }
     }
 }
