@@ -16,19 +16,22 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI comboText;
-    public int currentScore;
-    public int currentCombo;
-    public int scorePerNote = 30;
-
-    private void Awake()
-    {
-        player = GameObject.FindGameObjectWithTag("Player");
-        currentCombo = 1;
-        currentScore = 0;
-    }
+    private int currentScore;
+    private int finePoints = 50;
+    private int greatPoints = 150;
+    private int perfectPoints = 300;
+    private int fineNotes;
+    private int missNotes;
+    private int greatNotes;
+    private int perfectNotes;
+    private int currentCombo;
+    private int comboPoints;
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        currentScore = currentCombo = 0;
+        fineNotes = missNotes = greatNotes = perfectNotes = 0;
         instance = this;
     }
 
@@ -52,17 +55,73 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void NoteHit()
+    public void NoteHit(int accuracy) // 0 perfect, 1 great, 2 fine
     {
-        Debug.Log("note hit");
-        currentScore += scorePerNote;
+        // Adding points based on combo
         currentCombo++;
+        if ((currentCombo >= 2) && (currentCombo < 16))
+        {
+            comboPoints = 50;
+        }
+        else if ((currentCombo >= 16) && (currentCombo < 41))
+        {
+            comboPoints = 100;
+        }
+        else if ((currentCombo >= 41) && (currentCombo < 71))
+        {
+            comboPoints = 150;
+        }
+        else if ((currentCombo >= 71) && (currentCombo < 100))
+        {
+            comboPoints = 200;
+        }
+        else if (currentCombo >= 101)
+        {
+            comboPoints = 250;
+        }
+        else
+        {
+            comboPoints = 0;
+        }
+        currentScore += comboPoints;
+
+        // Adding points based on hit accuracy
+        switch (accuracy)
+        {
+            case 0: // perfect
+                {
+                    currentScore += perfectPoints;
+                    perfectNotes++;
+                    Debug.Log("perfect hit");
+                    break;
+                }
+            case 1: // great
+                {
+                    currentScore += greatPoints;
+                    greatNotes++;
+                    Debug.Log("great hit");
+                    break;
+                }
+            case 2: // fine
+                {
+                    currentScore += finePoints;
+                    fineNotes++;
+                    Debug.Log("fine hit");
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
+        }
+        
         scoreText.text = "Score: " + currentScore;
-        comboText.text = "Combo x" + currentCombo;
+        comboText.text = "Combo: " + currentCombo;
     }
     
     public void NoteMissed()
     {
-        Debug.Log("note miss");
+        missNotes++;
+        currentCombo = 0;
     }
 }
