@@ -18,14 +18,15 @@ public class GameManager : MonoBehaviour
     public int totalNotes;
     private int currentScore;
     private int currentCombo;
+    private int maxCombo;
     private int comboPoints;
     public Vector3 hitEffectPosition;
     [SerializeField] private GameObject[] accuracyEffects = new GameObject[4];
     private readonly Dictionary<int, int> accuracyPoints = new()
     {
-        { 0, 300}, // perfect
-        { 1, 150}, // great
-        { 2, 50}, // fine
+        { 0, 100}, // perfect
+        { 1, 50}, // great
+        { 2, 20}, // fine
         { 3, 0} // miss
     };
     private readonly Dictionary<int, int> accuracyCounter = new()
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        currentScore = currentCombo = 0;
+        currentScore = currentCombo = maxCombo = 0;
         instance = this;
     }
 
@@ -79,9 +80,14 @@ public class GameManager : MonoBehaviour
                       "E";
                 }
 
-                uiObject.ShowResultScreen(
+                if (maxCombo < currentCombo)
+                {
+                    maxCombo = currentCombo;
+                }
+
+                uiObject.ShowResultsScreen(
                     accuracyCounter[0],accuracyCounter[1], accuracyCounter[2], accuracyCounter[3],
-                    currentScore, rank);
+                    maxCombo, currentScore.ToString("D6"), rank);
                 GameManager.StopGame?.Invoke();
 
                 gameEnded = true;
@@ -92,24 +98,30 @@ public class GameManager : MonoBehaviour
     public void NoteHit(int accuracy)
     {
         currentCombo++;
-        comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 50 :
-               (currentCombo >= 16 && currentCombo < 41) ? 100 :
-               (currentCombo >= 41 && currentCombo < 71) ? 150 :
-               (currentCombo >= 71 && currentCombo < 100) ? 200 :
-               (currentCombo >= 101) ? 250 : 0;
+        comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 15 :
+               (currentCombo >= 16 && currentCombo < 41) ? 30 :
+               (currentCombo >= 41 && currentCombo < 71) ? 60 :
+               (currentCombo >= 71 && currentCombo < 100) ? 100 :
+               (currentCombo >= 101) ? 120 : 0;
         currentScore += comboPoints;
 
         currentScore += accuracyPoints[accuracy];
         accuracyCounter[accuracy]++;
         Instantiate(accuracyEffects[accuracy], hitEffectPosition, Quaternion.identity);
 
-        uiObject.UpdateScoreVisual(currentScore, currentCombo);
+        uiObject.UpdateScoreVisual(currentScore.ToString("D6"));
+        uiObject.UpdateComboVisual(currentCombo);
     }
 
     public void NoteMissed()
     {
+        maxCombo = currentCombo;
+        currentCombo = 0;
+
         currentScore += accuracyPoints[3];
         accuracyCounter[3]++;
+        
         Instantiate(accuracyEffects[3], hitEffectPosition, Quaternion.identity);
+        uiObject.UpdateComboVisual(currentCombo);
     }
 }

@@ -9,10 +9,10 @@ public class NoteObject : MonoBehaviour
     private bool wasNoteHit = false;
     public static event Action JumpNote;
 
-    private float finePos = 0.77f;
-    private float greatPos = 0.35f;
-    private float perfectPos = 0.15f;
-    private float centerPos = -2.04f;
+    private readonly float finePos = 0.77f;
+    private readonly float greatPos = 0.35f;
+    private readonly float perfectPos = 0.15f;
+    private readonly float centerPos = -2.04f;
     private float posDifference;
 
     #region Events
