@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RhythmController : MonoBehaviour
+public class HitObject : MonoBehaviour
 {
-    public float beatTempo; // how fast notes scroll
-    public bool songIsRunning;
+    public float lifetime = 1f;
+    private bool songIsRunning;
 
     #region Events
     private void OnEnable()
@@ -24,20 +24,12 @@ public class RhythmController : MonoBehaviour
     }
     private void StopSong()
     {
-        songIsRunning = false;
+        Destroy(gameObject);
     }
     #endregion
 
-    void Start()
+    private void Update()
     {
-        beatTempo /= 60f; // the units the notes scroll per second
-    }
-
-    void Update()
-    {
-        if (songIsRunning)
-        {
-            transform.position -= new Vector3(beatTempo * Time.deltaTime, 0f, 0f);
-        }
+        if (songIsRunning) Destroy(gameObject, lifetime);
     }
 }

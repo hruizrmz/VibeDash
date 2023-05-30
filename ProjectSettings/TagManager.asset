@@ -15,7 +15,7 @@ TagManager:
   - UI
   - Ground
   - Notes
-  - 
+  - Touch
   - 
   - 
   - 
@@ -66,4 +66,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 969925343
+    locked: 0
+  - name: Touch
+    uniqueID: 4219282309
     locked: 0

@@ -12,7 +12,7 @@ public class NoteObject : MonoBehaviour
     private float finePos = 0.77f;
     private float greatPos = 0.35f;
     private float perfectPos = 0.15f;
-    private float centerPos = -3.01f;
+    private float centerPos = -2.04f;
     private float posDifference;
 
     #region Events
@@ -44,7 +44,6 @@ public class NoteObject : MonoBehaviour
             posDifference = Math.Abs(transform.position.x - centerPos);
             if (posDifference > finePos)
             {
-                Debug.Log("note miss");
                 GameManager.instance.NoteMissed();
                 Destroy(gameObject);
                 return;
@@ -81,7 +80,6 @@ public class NoteObject : MonoBehaviour
             canBeTapped = false;
             if (!wasNoteHit)  // if the note exited with no tap
             {
-                Debug.Log("no hit");
                 GameManager.instance.NoteMissed();
                 Destroy(gameObject);
             }
