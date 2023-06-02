@@ -15,11 +15,13 @@ public class NoteObject : MonoBehaviour
     public static event Action JumpNote, LongJumpNote, SwipeUpNote, SwipeDownNote, ObstacleMissed;
     private readonly Dictionary<int, Action> noteTypeActions = new Dictionary<int, Action>();
 
-    private readonly float finePos = 0.77f;
-    private readonly float greatPos = 0.35f;
-    private readonly float perfectPos = 0.15f;
+    private readonly float finePos = 1.2f;
+    private readonly float greatPos = 0.6f;
+    private readonly float perfectPos = 0.3f;
     private readonly float centerPos = -2.04f;
     private float posDifference;
+
+    public int noteID;
 
     #region Events
     private void OnEnable()
@@ -34,7 +36,7 @@ public class NoteObject : MonoBehaviour
     }
     private void TouchStarted()
     {
-        isThereTouch = true;
+        if (canBeTapped) isThereTouch = true;
     }
     private void TouchEnded()
     {
@@ -49,7 +51,9 @@ public class NoteObject : MonoBehaviour
         noteTypeActions.Add(2, SwipeUpNote);
         noteTypeActions.Add(3, SwipeDownNote);
 
-        timeInstantiated = SongManager.GetAudioSourceTime();
+        timeInstantiated = assignedTime - SongManager.Instance.noteTime;
+
+        noteID = ScoreManager.Instance.notesSpawned - 1;
     }
 
     private void Update()
@@ -71,6 +75,7 @@ public class NoteObject : MonoBehaviour
         if (isThereTouch && canBeTapped)
         {
             wasNoteHit = true;
+            ScoreManager.Instance.currentNote++;
             posDifference = Math.Abs(transform.position.x - centerPos);
             if (posDifference > finePos)
             {
@@ -99,7 +104,7 @@ public class NoteObject : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Activator")
+        if (collision.tag == "Activator" && (noteID == ScoreManager.Instance.currentNote))
         {
             canBeTapped = true;
         }
@@ -113,6 +118,7 @@ public class NoteObject : MonoBehaviour
             if (!wasNoteHit)  // if the note exited with no tap
             {
                 if (noteType == 2) ObstacleMissed?.Invoke(); // if punch was missed, obstacle trips player
+                ScoreManager.Instance.currentNote++;
                 ScoreManager.Instance.NoteMissed(); 
                 Destroy(gameObject);
             }

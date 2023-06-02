@@ -17,6 +17,9 @@ public class ScoreManager : MonoBehaviour
     public UIManager uiObject;
 
     public int totalNotes;
+    public int notesSpawned;
+    public int currentNote;
+
     private int currentScore;
     private int currentCombo;
     private int maxCombo;
@@ -97,7 +100,15 @@ public class ScoreManager : MonoBehaviour
     {
         Instance.hitSFX.Play();
 
-        currentCombo++;
+        if (accuracy != 2) // combo only counts with perfect and great
+        {
+            currentCombo++;
+        } 
+        else
+        {
+            currentCombo = 0;
+        }
+
         comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 15 :
                (currentCombo >= 16 && currentCombo < 41) ? 30 :
                (currentCombo >= 41 && currentCombo < 71) ? 60 :

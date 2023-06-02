@@ -99,6 +99,8 @@ public class SongManager : MonoBehaviour
         notes.CopyTo(array, 0);
 
         foreach (var lane in lanes) lane.SetTimeStamps(array);
+
+        FindObjectOfType<ScoreManager>().totalNotes += array.Length;
     }
 
     public static double GetAudioSourceTime() // how many seconds the song has been playing for

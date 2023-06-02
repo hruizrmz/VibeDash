@@ -8,8 +8,8 @@ public class Lane : MonoBehaviour
 {
     public Melanchall.DryWetMidi.MusicTheory.NoteName noteRestriction;
     public GameObject notePrefab;
-    List<NoteObject> notes = new List<NoteObject>();
-    public List<double> timeStamps = new List<double>();
+    readonly List<NoteObject> notes = new();
+    public List<double> timeStamps = new();
 
     int spawnIndex = 0; // keeps track of which note to spawn
 
@@ -31,8 +31,6 @@ public class Lane : MonoBehaviour
     public void Start()
     {
         gameObject.SetActive(false);
-        // change way to count total notes!!!
-        FindObjectOfType<ScoreManager>().totalNotes = FindObjectsOfType<NoteObject>().Length;
     }
 
     public void SetTimeStamps(Melanchall.DryWetMidi.Interaction.Note[] array)
@@ -49,7 +47,7 @@ public class Lane : MonoBehaviour
 
     void Update()
     {
-        if (spawnIndex < timeStamps.Count) // until we go through all the notes
+        if (spawnIndex < timeStamps.Count) // until we go through all the notes in the lane
         {
             if (SongManager.GetAudioSourceTime() >= timeStamps[spawnIndex] - SongManager.Instance.noteTime)
             {
@@ -57,6 +55,7 @@ public class Lane : MonoBehaviour
                 notes.Add(note.GetComponent<NoteObject>());
                 note.GetComponent<NoteObject>().assignedTime = (float)timeStamps[spawnIndex];
                 spawnIndex++;
+                ScoreManager.Instance.notesSpawned++;
             }
         }
     }
