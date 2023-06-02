@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Runner : MonoBehaviour
 {
-    private bool jumpInput;
-    [SerializeField] private float jumpVel = 8f;
+    private bool isGameRunning;
+
+    private bool jumpInput, longJumpInput, punchInput, slideInput;
+    private float jumpVel = 8f;
     [SerializeField] private float jumpReleaseMod = 1f;
     [SerializeField] private float maxGroundDistance = 1.1f;
     
@@ -20,30 +22,48 @@ public class Runner : MonoBehaviour
     #region Events
     private void OnEnable()
     {
-        GameManager.StartGame += StartRunner;
+        ScoreManager.StartGame += StartRunner;
         NoteObject.JumpNote += PlayerJump;
+        NoteObject.LongJumpNote += PlayerLongJump;
+        NoteObject.SwipeUpNote += PlayerPunch;
+        NoteObject.SwipeDownNote += PlayerSlide;
     }
     private void OnDisable()
     {
-        GameManager.StartGame -= StartRunner;
+        ScoreManager.StartGame -= StartRunner;
         NoteObject.JumpNote -= PlayerJump;
+        NoteObject.LongJumpNote -= PlayerLongJump;
+        NoteObject.SwipeUpNote -= PlayerPunch;
+        NoteObject.SwipeDownNote -= PlayerSlide;
     }
     private void StartRunner()
     {
-        anim.SetBool("isRunning", true);
+        isGameRunning = true;
     }
     private void PlayerJump()
     {
         jumpInput = true;
     }
-
+    private void PlayerLongJump()
+    {
+        longJumpInput = true;
+    }
+    private void PlayerPunch()
+    {
+        punchInput = true;
+    }
+    private void PlayerSlide()
+    {
+        slideInput = true;
+    }
     #endregion
 
     private void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent <Animator>();
-        anim.SetBool("isRunning", false);
+        isGameRunning = false;
+        jumpInput = longJumpInput = punchInput = slideInput = false;
     }
 
     void Update()
@@ -54,21 +74,49 @@ public class Runner : MonoBehaviour
         {
             if (feetPosition > ground.groundHeight)
             {
-                if (jumpInput && !anim.GetBool("isJumping")) // grounded, above height, and has not jumped yet = jumping
+                if (!anim.GetBool("isJumping")) 
                 {
-                    anim.SetBool("isJumping", true);
-                    rb.velocity = new Vector2(rb.velocity.x, jumpVel);
+                    if (jumpInput) // grounded, above height, and has not jumped yet = jumping
+                    {
+                        anim.SetBool("isJumping", true);
+                        GetComponent<Rigidbody2D>().gravityScale = 2.5f;
+                        jumpVel = 8f;
+                        rb.velocity = new Vector2(rb.velocity.x, jumpVel);
+                        jumpInput = false;
+                    }
+                    else if (longJumpInput)
+                    {
+                        anim.SetBool("isJumping", true);
+                        GetComponent<Rigidbody2D>().gravityScale = 2f;
+                        jumpVel = 10f;
+                        rb.velocity = new Vector2(rb.velocity.x, jumpVel);
+                        longJumpInput = false;
+                    }
+                    else if (punchInput)
+                    {
+                        Debug.Log("punchInput");
+                        anim.SetTrigger("isPunching");
+                        punchInput = false;
+                    }
+                    else if (slideInput)
+                    {
+                        anim.SetTrigger("isSliding");
+                        slideInput = false;
+                    }
+                    else if (isGameRunning && !anim.GetBool("isRunning"))
+                    {
+                        anim.SetBool("isRunning", true);
+                    }
                 }
-                else // grounded, above height, and did not jump = landed/running
-                {
-                    anim.SetBool("isFalling", false);
-                }
+                anim.SetBool("isFalling", false);
             }
             else // grounded, below height = falling off building
             {
+                anim.SetBool("isRunning", false);
                 anim.SetBool("isFalling", true);
             }
-        } else
+        }
+        else
         {
             if (rb.velocity.y > 0) // not grounded, moving = still jumping
             {
@@ -76,9 +124,9 @@ public class Runner : MonoBehaviour
             }
             else // not grounded, not moving = falling after jumping
             {
+                anim.SetBool("isRunning", false);
                 anim.SetBool("isJumping", false);
                 anim.SetBool("isFalling", true);
-                jumpInput = false;
             }
         }
     }

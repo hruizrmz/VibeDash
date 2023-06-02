@@ -10,13 +10,13 @@ public class Parallax : MonoBehaviour
     #region Events
     private void OnEnable()
     {
-        GameManager.StartGame += StartBG;
-        GameManager.StopGame += StopBG;
+        ScoreManager.StartGame += StartBG;
+        ScoreManager.StopGame += StopBG;
     }
     private void OnDisable()
     {
-        GameManager.StartGame -= StartBG;
-        GameManager.StopGame -= StopBG;
+        ScoreManager.StartGame -= StartBG;
+        ScoreManager.StopGame -= StopBG;
     }
     private void StartBG()
     {

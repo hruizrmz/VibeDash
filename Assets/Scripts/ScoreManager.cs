@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class ScoreManager : MonoBehaviour
 {
     public static event Action StartGame;
     public static event Action StopGame;
     private bool gameStarted = false;
     private bool gameEnded = false;
 
-    public AudioSource levelMusic;
-    private GameObject player;
+    public static ScoreManager Instance;
 
-    public static GameManager instance;
+    public AudioSource hitSFX;
+
+    private GameObject player;
     public UIManager uiObject;
 
     public int totalNotes;
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         currentScore = currentCombo = maxCombo = 0;
-        instance = this;
+        Instance = this;
     }
 
     private void Update()
@@ -52,16 +53,13 @@ public class GameManager : MonoBehaviour
             {
                 gameStarted = true;
                 uiObject.ShowInGameScreen();
-                levelMusic.Play();
-                GameManager.StartGame?.Invoke();
+                ScoreManager.StartGame?.Invoke();
             }
         }
         else
         {
             if (player == null && !gameEnded)
             {
-                levelMusic.volume = .20f;
-
                 float totalHit = accuracyCounter[0] + accuracyCounter[1];
                 float percentHit = (totalHit / totalNotes) * 100f;
 
@@ -88,7 +86,7 @@ public class GameManager : MonoBehaviour
                 uiObject.ShowResultsScreen(
                     accuracyCounter[0],accuracyCounter[1], accuracyCounter[2], accuracyCounter[3],
                     maxCombo, currentScore.ToString("D6"), rank);
-                GameManager.StopGame?.Invoke();
+                ScoreManager.StopGame?.Invoke();
 
                 gameEnded = true;
             }
@@ -97,6 +95,8 @@ public class GameManager : MonoBehaviour
 
     public void NoteHit(int accuracy)
     {
+        Instance.hitSFX.Play();
+
         currentCombo++;
         comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 15 :
                (currentCombo >= 16 && currentCombo < 41) ? 30 :

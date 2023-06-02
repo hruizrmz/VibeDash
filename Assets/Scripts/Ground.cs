@@ -16,13 +16,13 @@ public class Ground : MonoBehaviour
     #region Events
     private void OnEnable()
     {
-        GameManager.StartGame += StartGround;
-        GameManager.StopGame += StopGround;
+        ScoreManager.StartGame += StartGround;
+        ScoreManager.StopGame += StopGround;
     }
     private void OnDisable()
     {
-        GameManager.StartGame -= StartGround;
-        GameManager.StopGame -= StopGround;
+        ScoreManager.StartGame -= StartGround;
+        ScoreManager.StopGame -= StopGround;
     }
     private void StartGround()
     {

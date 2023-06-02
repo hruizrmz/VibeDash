@@ -55,9 +55,6 @@ TagManager:
   - name: Runner
     uniqueID: 551112625
     locked: 0
-  - name: Environment
-    uniqueID: 4109906021
-    locked: 0
   - name: Vehicle
     uniqueID: 1683234287
     locked: 0

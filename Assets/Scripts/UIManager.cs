@@ -4,8 +4,7 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     public GameObject inGameScreen;
-    public GameObject noteBar;
-    public GameObject noteController;
+    public GameObject noteLanes;
 
     public TextMeshProUGUI inGameScoreText;
     public TextMeshProUGUI inGameComboText;
@@ -16,15 +15,18 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         inGameScreen.SetActive(false);
-        noteBar.SetActive(false);
         resultsScreen.SetActive(false);
     }
 
     public void ShowInGameScreen()
     {
         inGameScreen.SetActive(true);
-        noteBar.SetActive(true);
-        noteController.SetActive(true);
+        noteLanes.GetComponent<SpriteRenderer>().enabled = true;
+        for (int i = 0; i < noteLanes.transform.childCount; i++)
+        {
+            GameObject child = noteLanes.transform.GetChild(i).gameObject;
+            child.SetActive(true);
+        }
     }
 
     public void UpdateScoreVisual(string score)
@@ -40,8 +42,7 @@ public class UIManager : MonoBehaviour
     public void ShowResultsScreen(int perfect, int great, int fine, int miss, int maxCombo, string score, string rank)
     {
         inGameScreen.SetActive(false);
-        noteBar.SetActive(false);
-        noteController.SetActive(false);
+        noteLanes.SetActive(false);
 
         resultsScreen.SetActive(true);
         perfectText.text = string.Format("{0}", perfect);

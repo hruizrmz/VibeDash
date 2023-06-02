@@ -4,32 +4,10 @@ using UnityEngine;
 
 public class HitObject : MonoBehaviour
 {
-    public float lifetime = 1f;
-    private bool songIsRunning;
-
-    #region Events
-    private void OnEnable()
-    {
-        GameManager.StartGame += StartSong;
-        GameManager.StopGame += StopSong;
-    }
-    private void OnDisable()
-    {
-        GameManager.StartGame -= StartSong;
-        GameManager.StopGame -= StopSong;
-    }
-    private void StartSong()
-    {
-        songIsRunning = true;
-    }
-    private void StopSong()
-    {
-        Destroy(gameObject);
-    }
-    #endregion
+    public float lifetime = 0.5f;
 
     private void Update()
     {
-        if (songIsRunning) Destroy(gameObject, lifetime);
+        Destroy(gameObject, lifetime);
     }
 }
