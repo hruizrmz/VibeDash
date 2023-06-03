@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4513242529480113158}
   - component: {fileID: 7274709156178449235}
   m_Layer: 0
-  m_Name: Hold
+  m_Name: HoldStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1809062877480618782}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -100,6 +100,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assignedTime: 0
   noteType: 0
+  holdBarPrefab: {fileID: 4359149374315518232, guid: 6faa16d00ce14f84699bca44a77fdafb, type: 3}
+  holdEndPrefab: {fileID: 6261635204716709914, guid: 9c0be3867c43ea341a6ae20a2b8ccc91, type: 3}
 --- !u!58 &7274709156178449235
 CircleCollider2D:
   m_ObjectHideFlags: 0

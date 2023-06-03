@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    public static event Action TapStarted;
-    public static event Action TapEnded;
+    public static event Action TapStarted, TapEnded;
+    public static event Action SwipeUp, SwipeDown, SwipeRight;
 
     [SerializeField] private GameObject touchIndicator;
     private Animator touchAnimator;
@@ -76,19 +76,15 @@ public class InputManager : MonoBehaviour
     {
         if (Vector2.Dot(Vector2.up, direction) > directionThreshold)
         {
-            Debug.Log("swipe up");
+            InputManager.SwipeUp?.Invoke();
         }
         if (Vector2.Dot(Vector2.down, direction) > directionThreshold)
         {
-            Debug.Log("swipe down");
-        }
-        if (Vector2.Dot(Vector2.left, direction) > directionThreshold)
-        {
-            Debug.Log("swipe left");
+            InputManager.SwipeDown?.Invoke();
         }
         if (Vector2.Dot(Vector2.right, direction) > directionThreshold)
         {
-            Debug.Log("swipe right");
+            InputManager.SwipeRight?.Invoke();
         }
     }
 }

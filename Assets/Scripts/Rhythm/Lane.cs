@@ -11,6 +11,7 @@ public class Lane : MonoBehaviour
     readonly List<NoteObject> notes = new();
     public List<double> timeStamps = new();
 
+    public int laneID = 0; // 0 tap, 1 hold, 2 swipe up, 3 swipe down, 4 swipe right
     int spawnIndex = 0; // keeps track of which note to spawn
 
     #region Events

@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1555742531714689293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -100,6 +100,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assignedTime: 0
   noteType: 0
+  holdBarPrefab: {fileID: 4359149374315518232, guid: 6faa16d00ce14f84699bca44a77fdafb, type: 3}
+  holdEndPrefab: {fileID: 6261635204716709914, guid: 9c0be3867c43ea341a6ae20a2b8ccc91, type: 3}
 --- !u!58 &6187395874181724571
 CircleCollider2D:
   m_ObjectHideFlags: 0

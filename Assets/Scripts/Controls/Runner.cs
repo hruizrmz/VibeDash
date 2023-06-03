@@ -23,18 +23,18 @@ public class Runner : MonoBehaviour
     private void OnEnable()
     {
         ScoreManager.StartGame += StartRunner;
-        NoteObject.JumpNote += PlayerJump;
-        NoteObject.LongJumpNote += PlayerLongJump;
-        NoteObject.SwipeUpNote += PlayerPunch;
+        NoteObject.HoldNote += PlayerLongJump;
+        NoteObject.SwipeUpNote += PlayerJump;
         NoteObject.SwipeDownNote += PlayerSlide;
+        NoteObject.SwipeRightNote += PlayerPunch;
     }
     private void OnDisable()
     {
         ScoreManager.StartGame -= StartRunner;
-        NoteObject.JumpNote -= PlayerJump;
-        NoteObject.LongJumpNote -= PlayerLongJump;
-        NoteObject.SwipeUpNote -= PlayerPunch;
+        NoteObject.HoldNote -= PlayerLongJump;
+        NoteObject.SwipeUpNote -= PlayerJump;
         NoteObject.SwipeDownNote -= PlayerSlide;
+        NoteObject.SwipeRightNote -= PlayerPunch;
     }
     private void StartRunner()
     {
@@ -48,13 +48,13 @@ public class Runner : MonoBehaviour
     {
         longJumpInput = true;
     }
-    private void PlayerPunch()
-    {
-        punchInput = true;
-    }
     private void PlayerSlide()
     {
         slideInput = true;
+    }
+    private void PlayerPunch()
+    {
+        punchInput = true;
     }
     #endregion
 
@@ -63,7 +63,7 @@ public class Runner : MonoBehaviour
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent <Animator>();
         isGameRunning = false;
-        jumpInput = longJumpInput = punchInput = slideInput = false;
+        jumpInput = longJumpInput = slideInput = punchInput = false;
     }
 
     void Update()
@@ -92,16 +92,16 @@ public class Runner : MonoBehaviour
                         rb.velocity = new Vector2(rb.velocity.x, jumpVel);
                         longJumpInput = false;
                     }
+                    else if (slideInput)
+                    {
+                        anim.SetTrigger("isSliding");
+                        slideInput = false;
+                    }
                     else if (punchInput)
                     {
                         Debug.Log("punchInput");
                         anim.SetTrigger("isPunching");
                         punchInput = false;
-                    }
-                    else if (slideInput)
-                    {
-                        anim.SetTrigger("isSliding");
-                        slideInput = false;
                     }
                     else if (isGameRunning && !anim.GetBool("isRunning"))
                     {

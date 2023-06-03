@@ -7,12 +7,12 @@ public class NoteObject : MonoBehaviour
     double timeInstantiated; // time of spawn
     public float assignedTime; // time until perfect tap in seconds
 
-    private bool isThereTouch;
+    private bool isThereTouch, isThereSwipeU, isThereSwipeD, isThereSwipeR;
     private bool canBeTapped;
-
     private bool wasNoteHit = false;
-    public int noteType = 0; // 0 jump, 1 long jump, 2 swipe up, 3 swipe down, 4 normal
-    public static event Action JumpNote, LongJumpNote, SwipeUpNote, SwipeDownNote, ObstacleMissed;
+
+    public int noteType = 0; // 0 tap, 1 hold, 2 swipe up, 3 swipe down, 4 swipe right
+    public static event Action TapNote, HoldNote, SwipeUpNote, SwipeDownNote, SwipeRightNote, ObstacleMissed;
     private readonly Dictionary<int, Action> noteTypeActions = new Dictionary<int, Action>();
 
     private readonly float finePos = 1.2f;
@@ -21,18 +21,31 @@ public class NoteObject : MonoBehaviour
     private readonly float centerPos = -2.04f;
     private float posDifference;
 
-    public int noteID;
+    private int noteID;
+    // public GameObject holdBarPrefab;
+    // public GameObject holdEndPrefab;
+    // add X number of bars depending on note length, and then spawn end after them
+    // only start and end should have collider
+    // make bars really tiny and hide their Destroy behind a white particle effect
+    // https://www.reddit.com/r/gamedev/comments/m7dsa5/how_to_make_longheld_notes_in_a_unity_rhythm_game/
+    // https://youtu.be/89KpbT_7Ysg?t=276
 
     #region Events
     private void OnEnable()
     {
         InputManager.TapStarted += TouchStarted;
         InputManager.TapEnded += TouchEnded;
+        InputManager.SwipeUp += SwipeUp;
+        InputManager.SwipeDown += SwipeDown;
+        InputManager.SwipeRight += SwipeRight;
     }
     private void OnDisable()
     {
         InputManager.TapStarted -= TouchStarted;
         InputManager.TapEnded -= TouchEnded;
+        InputManager.SwipeUp -= SwipeUp;
+        InputManager.SwipeDown -= SwipeDown;
+        InputManager.SwipeRight -= SwipeRight;
     }
     private void TouchStarted()
     {
@@ -42,18 +55,39 @@ public class NoteObject : MonoBehaviour
     {
         isThereTouch = false;
     }
+    private void SwipeUp()
+    {
+        if (canBeTapped) isThereSwipeU = true;
+    }
+    private void SwipeDown()
+    {
+        if (canBeTapped) isThereSwipeD = true;
+    }
+    private void SwipeRight()
+    {
+        if (canBeTapped) isThereSwipeR = true;
+    }
     #endregion
 
     private void Start()
     {
-        noteTypeActions.Add(0, JumpNote);
-        noteTypeActions.Add(1, LongJumpNote);
+        noteTypeActions.Add(0, TapNote);
+        noteTypeActions.Add(1, HoldNote);
         noteTypeActions.Add(2, SwipeUpNote);
         noteTypeActions.Add(3, SwipeDownNote);
+        noteTypeActions.Add(4, SwipeRightNote);
 
         timeInstantiated = assignedTime - SongManager.Instance.noteTime;
 
         noteID = ScoreManager.Instance.notesSpawned - 1;
+        noteType = GetComponentInParent<Lane>().laneID;
+
+        /*
+        if (noteType == 2)
+        {
+            Instantiate(holdBarPrefab, transform);
+        }
+        */
     }
 
     private void Update()
@@ -72,33 +106,57 @@ public class NoteObject : MonoBehaviour
             GetComponent<SpriteRenderer>().enabled = true;
         }
 
-        if (isThereTouch && canBeTapped)
+        if (canBeTapped)
         {
-            wasNoteHit = true;
-            ScoreManager.Instance.currentNote++;
-            posDifference = Math.Abs(transform.position.x - centerPos);
-            if (posDifference > finePos)
+            if (noteType == 0 && isThereTouch)
             {
-                ScoreManager.Instance.NoteMissed();
-                Destroy(gameObject);
-                return;
+                wasNoteHit = true;
             }
-            else if (posDifference > greatPos)
+            else if (noteType == 1 && isThereTouch)
             {
-                ScoreManager.Instance.NoteHit(2);
+                wasNoteHit = true;
             }
-            else if (posDifference > perfectPos)
+            else if (noteType == 2 && isThereSwipeU)
             {
-                ScoreManager.Instance.NoteHit(1);
+                wasNoteHit = true;
             }
-            else
+            else if (noteType == 3 && isThereSwipeD)
             {
-                ScoreManager.Instance.NoteHit(0);
+                wasNoteHit = true;
+            }
+            else if (noteType == 4 && isThereSwipeR)
+            {
+                wasNoteHit = true;
             }
 
-            if (noteType != 4) noteTypeActions[noteType]?.Invoke();
-            
-            Destroy(gameObject);
+            if (wasNoteHit)
+            {
+                ScoreManager.Instance.currentNote++;
+
+                posDifference = Math.Abs(transform.position.x - centerPos);
+                if (posDifference > finePos)
+                {
+                    ScoreManager.Instance.NoteMissed();
+                    Destroy(gameObject);
+                    return;
+                }
+                else if (posDifference > greatPos)
+                {
+                    ScoreManager.Instance.NoteHit(2);
+                }
+                else if (posDifference > perfectPos)
+                {
+                    ScoreManager.Instance.NoteHit(1);
+                }
+                else
+                {
+                    ScoreManager.Instance.NoteHit(0);
+                }
+
+                noteTypeActions[noteType]?.Invoke();
+
+                Destroy(gameObject);
+            }
         }
     }
 

@@ -6,13 +6,13 @@ public class Obstacle : MonoBehaviour
 
     private void OnEnable()
     {
-        NoteObject.SwipeUpNote += BreakObstacle;
+        NoteObject.SwipeRightNote += BreakObstacle;
         NoteObject.ObstacleMissed += TripPlayer;
     }
 
     private void OnDisable()
     {
-        NoteObject.SwipeUpNote -= BreakObstacle;
+        NoteObject.SwipeRightNote -= BreakObstacle;
         NoteObject.ObstacleMissed -= TripPlayer;
     }
     
