@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Melanchall.DryWetMidi.Core;
@@ -10,7 +11,9 @@ public class SongManager : MonoBehaviour
 {
     public static SongManager Instance;
     public AudioSource audioSource;
-    public Lane[] lanes;
+    public Lane[] lanesArray;
+    public Note[] notesArray;
+    public List<double> holdNotesList;
     public float songDelayInSeconds;
 
     public string midiFileLocation;
@@ -55,36 +58,8 @@ public class SongManager : MonoBehaviour
     void Start()
     {
         Instance = this;
-        if (Application.streamingAssetsPath.StartsWith("http://") || Application.streamingAssetsPath.StartsWith("https://") )
-        {
-            StartCoroutine(ReadFromWebsite());
-        }
-        else
-        {
-            ReadFromFile();
-        }
+        ReadFromFile();
         GetDataFromMidi();
-    }
-
-    private IEnumerator ReadFromWebsite()
-    {
-        using (UnityWebRequest www = UnityWebRequest.Get(Application.streamingAssetsPath + "/" + midiFileLocation))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.DataProcessingError)
-            {
-                Debug.LogError(www.error);
-            }
-            else
-            {
-                byte[] results = www.downloadHandler.data;
-                using (var stream = new MemoryStream(results))
-                {
-                    midiFile = MidiFile.Read(stream);
-                }
-            }
-        }
     }
 
     private void ReadFromFile()
@@ -95,12 +70,19 @@ public class SongManager : MonoBehaviour
     private void GetDataFromMidi()
     {
         var notes = midiFile.GetNotes();
-        var array = new Melanchall.DryWetMidi.Interaction.Note[notes.Count];
-        notes.CopyTo(array, 0);
+        notesArray = new Melanchall.DryWetMidi.Interaction.Note[notes.Count];
+        notes.CopyTo(notesArray, 0);
 
-        foreach (var lane in lanes) lane.SetTimeStamps(array);
+        foreach (var lane in lanesArray) lane.SetTimeStamps(notesArray);
 
-        FindObjectOfType<ScoreManager>().totalNotes += array.Length;
+        double basicNoteLength = ((TimeSpan)SongManager.Instance.notesArray[0].LengthAs<MetricTimeSpan>(SongManager.midiFile.GetTempoMap())).TotalSeconds;
+        foreach (var note in notesArray)
+        {
+            double noteLength = ((TimeSpan)note.LengthAs<MetricTimeSpan>(SongManager.midiFile.GetTempoMap())).TotalSeconds;
+            if (noteLength > basicNoteLength) holdNotesList.Add(noteLength);
+        }
+
+        FindObjectOfType<ScoreManager>().totalNotes += notesArray.Length;
     }
 
     public static double GetAudioSourceTime() // how many seconds the song has been playing for

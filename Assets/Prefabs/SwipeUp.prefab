@@ -99,9 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   assignedTime: 0
-  noteType: 0
-  holdBarPrefab: {fileID: 4359149374315518232, guid: 6faa16d00ce14f84699bca44a77fdafb, type: 3}
-  holdEndPrefab: {fileID: 6261635204716709914, guid: 9c0be3867c43ea341a6ae20a2b8ccc91, type: 3}
+  noteType: 2
 --- !u!58 &7403242974149947951
 CircleCollider2D:
   m_ObjectHideFlags: 0

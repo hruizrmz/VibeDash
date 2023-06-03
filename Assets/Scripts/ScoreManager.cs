@@ -16,9 +16,7 @@ public class ScoreManager : MonoBehaviour
     private GameObject player;
     public UIManager uiObject;
 
-    public int totalNotes;
-    public int notesSpawned;
-    public int currentNote;
+    public int totalNotes, notesSpawned, currentNote;
 
     private int currentScore;
     private int currentCombo;
@@ -98,8 +96,6 @@ public class ScoreManager : MonoBehaviour
 
     public void NoteHit(int accuracy)
     {
-        Instance.hitSFX.Play();
-
         if (accuracy != 2) // combo only counts with perfect and great
         {
             currentCombo++;
@@ -134,5 +130,10 @@ public class ScoreManager : MonoBehaviour
         
         Instantiate(accuracyEffects[3], hitEffectPosition, Quaternion.identity);
         uiObject.UpdateComboVisual(currentCombo);
+    }
+
+    public void PlayHitSound()
+    {
+        Instance.hitSFX.Play();
     }
 }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8833608326800973214}
   - component: {fileID: 1337594241395945472}
+  - component: {fileID: 1672190147788660326}
   - component: {fileID: -5793081592281479113}
   m_Layer: 0
   m_Name: HoldEnd
@@ -40,7 +41,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6261635204716709914}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 7
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: b01e619b6023e64428e2846751b725e5, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9215687, g: 0.37647063, b: 0.7490196, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -85,6 +86,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1672190147788660326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6261635204716709914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 462eea03b74eddb47b66123a720e0c62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignedTime: 0
+  noteType: 6
 --- !u!58 &-5793081592281479113
 CircleCollider2D:
   m_ObjectHideFlags: 0
