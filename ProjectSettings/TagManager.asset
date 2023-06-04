@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - GameManager
+  - Activator
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - Notes
+  - Touch
   - 
   - 
   - 
@@ -54,9 +55,6 @@ TagManager:
   - name: Runner
     uniqueID: 551112625
     locked: 0
-  - name: Environment
-    uniqueID: 4109906021
-    locked: 0
   - name: Vehicle
     uniqueID: 1683234287
     locked: 0
@@ -65,4 +63,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 969925343
+    locked: 0
+  - name: Touch
+    uniqueID: 4219282309
     locked: 0
