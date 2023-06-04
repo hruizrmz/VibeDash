@@ -11,7 +11,7 @@ public class NoteObject : MonoBehaviour
     private bool isThereTouch, isThereHold, isThereSwipeU, isThereSwipeD, isThereSwipeR;
     private bool canBeTapped;
     private bool wasNoteHit = false;
-    public bool safeToEndHold = false;
+    private bool safeToEndHold = false;
 
     public int noteType = 0; // 0 tap, 1 hold, 2 swipe up, 3 swipe down, 4 swipe right, 5 hold body, 6 hold end
     public static event Action TapNote, HoldNote, SwipeUpNote, SwipeDownNote, SwipeRightNote, HoldStarted, HoldMissed, ObstacleMissed;

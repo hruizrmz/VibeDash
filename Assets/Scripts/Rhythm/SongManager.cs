@@ -75,11 +75,12 @@ public class SongManager : MonoBehaviour
 
         foreach (var lane in lanesArray) lane.SetTimeStamps(notesArray);
 
-        double basicNoteLength = ((TimeSpan)SongManager.Instance.notesArray[0].LengthAs<MetricTimeSpan>(SongManager.midiFile.GetTempoMap())).TotalSeconds;
         foreach (var note in notesArray)
         {
-            double noteLength = ((TimeSpan)note.LengthAs<MetricTimeSpan>(SongManager.midiFile.GetTempoMap())).TotalSeconds;
-            if (noteLength > basicNoteLength) holdNotesList.Add(noteLength);
+            if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.E) { // the note restriction for the hold lane is E
+                double noteLength = ((TimeSpan)note.LengthAs<MetricTimeSpan>(SongManager.midiFile.GetTempoMap())).TotalSeconds;
+                holdNotesList.Add(noteLength);
+            }
         }
 
         FindObjectOfType<ScoreManager>().totalNotes += notesArray.Length;

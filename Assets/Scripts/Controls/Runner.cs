@@ -99,7 +99,6 @@ public class Runner : MonoBehaviour
                     }
                     else if (punchInput)
                     {
-                        Debug.Log("punchInput");
                         anim.SetTrigger("isPunching");
                         punchInput = false;
                     }

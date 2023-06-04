@@ -982,6 +982,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599743470}
   m_CullTransparentMesh: 1
+--- !u!1 &682211200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 682211201}
+  - component: {fileID: 682211202}
+  m_Layer: 7
+  m_Name: Lane SwipeRight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &682211201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682211200}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.021331377, z: 0}
+  m_LocalScale: {x: 1.0665699, y: 1.0665699, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1430225282}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &682211202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682211200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5707a501b2bef904bb2b877a516415e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noteRestriction: 8
+  notePrefab: {fileID: 9052031981673550320, guid: 9f107d2afcfcd2c4e99474dacf0b5331, type: 3}
+  holdBodyPrefab: {fileID: 4359149374315518232, guid: 6faa16d00ce14f84699bca44a77fdafb, type: 3}
+  holdEndPrefab: {fileID: 6261635204716709914, guid: 9c0be3867c43ea341a6ae20a2b8ccc91, type: 3}
+  timeStamps: []
+  laneID: 4
 --- !u!1 &687070029
 GameObject:
   m_ObjectHideFlags: 0
@@ -2282,7 +2332,7 @@ AudioSource:
   m_Volume: 0.7
   m_Pitch: 1
   Loop: 0
-  Mute: 1
+  Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
@@ -2381,6 +2431,7 @@ MonoBehaviour:
   - {fileID: 846810915}
   - {fileID: 2101831782}
   - {fileID: 2109330876}
+  - {fileID: 682211202}
   holdNotesList: []
   songDelayInSeconds: 0
   midiFileLocation: VibeDashMap.mid
@@ -3340,6 +3391,7 @@ Transform:
   - {fileID: 846810916}
   - {fileID: 2101831783}
   - {fileID: 2109330877}
+  - {fileID: 682211201}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
