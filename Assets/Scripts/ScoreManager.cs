@@ -4,16 +4,10 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static event Action StartGame;
-    public static event Action StopGame;
-    private bool gameStarted = false;
-    private bool gameEnded = false;
-
     public static ScoreManager Instance;
 
     public AudioSource hitSFX;
 
-    private GameObject player;
     public UIManager uiObject;
 
     public int totalNotes, notesSpawned, currentNote;
@@ -38,60 +32,51 @@ public class ScoreManager : MonoBehaviour
         { 2, 0}, // fine
         { 3, 0} // miss
     };
+    private string rank;
+
+    private void OnEnable()
+    {
+        GameManager.StopGame += CalculateResults;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.StopGame -= CalculateResults;
+    }
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
         currentScore = currentCombo = maxCombo = 0;
         Instance = this;
     }
 
-    private void Update()
+    private void CalculateResults()
     {
-        if (!gameStarted)
+        float totalHit = accuracyCounter[0] + accuracyCounter[1];
+        float percentHit = (totalHit / totalNotes) * 100f;
+
+        if (accuracyCounter[0] == totalNotes)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                gameStarted = true;
-                uiObject.ShowInGameScreen();
-                ScoreManager.StartGame?.Invoke();
-            }
+            rank = "SS";
         }
         else
         {
-            if (player == null && !gameEnded)
-            {
-                float totalHit = accuracyCounter[0] + accuracyCounter[1];
-                float percentHit = (totalHit / totalNotes) * 100f;
-
-                string rank;
-                if (accuracyCounter[0] == totalNotes)
-                {
-                    rank = "SS";
-                }
-                else
-                {
-                    rank = (percentHit >= 90f) ? "S" :
-                      (percentHit >= 80f) ? "A" :
-                      (percentHit >= 65f) ? "B" :
-                      (percentHit >= 50f) ? "C" :
-                      (percentHit >= 30f) ? "D" :
-                      "E";
-                }
-
-                if (maxCombo < currentCombo)
-                {
-                    maxCombo = currentCombo;
-                }
-
-                uiObject.ShowResultsScreen(
-                    accuracyCounter[0],accuracyCounter[1], accuracyCounter[2], accuracyCounter[3],
-                    maxCombo, currentScore.ToString("D6"), rank);
-                ScoreManager.StopGame?.Invoke();
-
-                gameEnded = true;
-            }
+            rank = (percentHit >= 90f) ? "S" :
+              (percentHit >= 80f) ? "A" :
+              (percentHit >= 65f) ? "B" :
+              (percentHit >= 50f) ? "C" :
+              (percentHit >= 30f) ? "D" :
+              "E";
         }
+
+        if (maxCombo < currentCombo)
+        {
+            maxCombo = currentCombo;
+        }
+
+        uiObject.ShowResultsScreen(
+            accuracyCounter[0], accuracyCounter[1], accuracyCounter[2], accuracyCounter[3],
+            maxCombo, currentScore.ToString("D6"), rank);
     }
 
     public void NoteHit(int accuracy)
@@ -122,7 +107,11 @@ public class ScoreManager : MonoBehaviour
 
     public void NoteMissed()
     {
-        maxCombo = currentCombo;
+        if (maxCombo < currentCombo)
+        {
+            maxCombo = currentCombo;
+        }
+
         currentCombo = 0;
 
         currentScore += accuracyPoints[3];

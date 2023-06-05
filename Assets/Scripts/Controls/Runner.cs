@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Runner : MonoBehaviour
 {
-    private bool isGameRunning;
+    public bool isGameRunning;
 
     private bool jumpInput, longJumpInput, punchInput, slideInput;
     private float jumpVel = 8f;
@@ -22,7 +22,8 @@ public class Runner : MonoBehaviour
     #region Events
     private void OnEnable()
     {
-        ScoreManager.StartGame += StartRunner;
+        GameManager.StartGame += StartRunner;
+        GameManager.StopGame += StopRunner;
         NoteObject.HoldNote += PlayerLongJump;
         NoteObject.SwipeUpNote += PlayerJump;
         NoteObject.SwipeDownNote += PlayerSlide;
@@ -30,7 +31,8 @@ public class Runner : MonoBehaviour
     }
     private void OnDisable()
     {
-        ScoreManager.StartGame -= StartRunner;
+        GameManager.StartGame -= StartRunner;
+        GameManager.StopGame -= StopRunner;
         NoteObject.HoldNote -= PlayerLongJump;
         NoteObject.SwipeUpNote -= PlayerJump;
         NoteObject.SwipeDownNote -= PlayerSlide;
@@ -39,6 +41,11 @@ public class Runner : MonoBehaviour
     private void StartRunner()
     {
         isGameRunning = true;
+    }
+    private void StopRunner()
+    {
+        isGameRunning = false;
+        Destroy(gameObject);
     }
     private void PlayerJump()
     {
@@ -62,7 +69,6 @@ public class Runner : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent <Animator>();
-        isGameRunning = false;
         jumpInput = longJumpInput = slideInput = punchInput = false;
     }
 

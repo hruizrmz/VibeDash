@@ -28,20 +28,24 @@ public class SongManager : MonoBehaviour
         }
     }
 
+    private bool isGameRunning;
+    public bool isSongPlaying;
+
     #region Events
     private void OnEnable()
     {
-        ScoreManager.StartGame += StartSong;
-        ScoreManager.StopGame += StopSong;
+        GameManager.StartGame += StartSong;
+        GameManager.StopGame += StopSong;
     }
     private void OnDisable()
     {
-        ScoreManager.StartGame -= StartSong;
-        ScoreManager.StartGame -= StopSong;
+        GameManager.StartGame -= StartSong;
+        GameManager.StartGame -= StopSong;
     }
     private void StartSong()
     {
         Invoke(nameof(StartPlayback), songDelayInSeconds);
+        isGameRunning = isSongPlaying = true;
     }
     private void StartPlayback()
     {
@@ -50,6 +54,7 @@ public class SongManager : MonoBehaviour
     private void StopSong()
     {
         audioSource.volume = 0.2f;
+        isGameRunning = false;
     }
     #endregion
 
@@ -89,5 +94,16 @@ public class SongManager : MonoBehaviour
     public static double GetAudioSourceTime() // how many seconds the song has been playing for
     {
         return (double)Instance.audioSource.timeSamples / Instance.audioSource.clip.frequency;
+    }
+
+    private void Update()
+    {
+        if (isGameRunning)
+        {
+            if (!audioSource.isPlaying)
+            {
+                isSongPlaying = false;
+            }
+        }
     }
 }

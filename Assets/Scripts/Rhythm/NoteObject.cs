@@ -49,10 +49,7 @@ public class NoteObject : MonoBehaviour
     }
     private void DeleteHoldNote() // for when a hold note is never started
     {
-        if (noteID == (ScoreManager.Instance.currentNote-1)) {
-            wasNoteHit = true;
-            Destroy(gameObject);
-        }
+        if (noteID == (ScoreManager.Instance.currentNote - 1)) Destroy(gameObject);
     }
     private void TouchStarted()
     {
@@ -76,13 +73,8 @@ public class NoteObject : MonoBehaviour
                 {
                     ScoreManager.Instance.currentNote++;
                     ScoreManager.Instance.NoteMissed();
-                    wasNoteHit = true;
-                    Destroy(gameObject);
+                    HoldMissed?.Invoke();
                 }
-            }
-            else if (noteType == 5)
-            {
-                Destroy(gameObject);
             }
         }
     }
