@@ -10,22 +10,29 @@ public class GameManager : MonoBehaviour
     public static event Action StartGame;
     public static event Action StopGame;
 
-    public bool isGameRunning;
+    private bool isGameRunning;
+
+    private float currentTime;
+    [SerializeField] private float countdownTime;
 
     public GameObject player;
     public UIManager uiObject;
 
-    // Start is called before the first frame update
     void Start()
     {
+        currentTime = countdownTime + 1;
         uiObject.ShowInGameScreen();
         GameManager.StartGame?.Invoke();
-        isGameRunning = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (!isGameRunning && currentTime>0)
+        {
+            currentTime -= 1 * Time.deltaTime;
+            if (uiObject.SongCountdown(currentTime)) isGameRunning = true;
+        }
+
         if (isGameRunning)
         {
             if (player == null || !SongManager.Instance.isSongPlaying)

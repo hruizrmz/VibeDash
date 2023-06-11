@@ -17,9 +17,9 @@ public class NoteObject : MonoBehaviour
     public static event Action TapNote, HoldNote, SwipeUpNote, SwipeDownNote, SwipeRightNote, HoldStarted, HoldMissed, ObstacleMissed;
     private readonly Dictionary<int, Action> noteTypeActions = new Dictionary<int, Action>();
 
-    private readonly float finePos = 1.2f;
-    private readonly float greatPos = 0.6f;
-    private readonly float perfectPos = 0.3f;
+    private readonly float finePos = 1.4f;
+    private readonly float greatPos = 0.9f;
+    private readonly float perfectPos = 0.4f;
     private readonly float centerPos = -2.04f;
     private float posDifference;
 
@@ -133,6 +133,16 @@ public class NoteObject : MonoBehaviour
                 GetComponent<SpriteRenderer>().enabled = true;
                 spriteDisabled = false;
             }
+            /*
+            if (transform.localPosition.x <= centerPos)
+            {
+                isThereTouch = true;
+                isThereSwipeU = true;
+                isThereSwipeR = true;
+                isThereSwipeD = true;
+                isThereHold = false;
+            }
+            */
         }
 
         if (canBeTapped)

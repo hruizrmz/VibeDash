@@ -6,6 +6,8 @@ public class UIManager : MonoBehaviour
     public GameObject inGameScreen;
     public GameObject noteLanes;
 
+    public TextMeshProUGUI countdownText;
+
     public TextMeshProUGUI inGameScoreText;
     public TextMeshProUGUI inGameComboText;
 
@@ -52,5 +54,25 @@ public class UIManager : MonoBehaviour
         maxComboText.text = string.Format("{0}", maxCombo);
         scoreText.text = score;
         rankText.text = rank;
+    }
+
+    public bool SongCountdown(float second)
+    {
+        if (second >= 2)
+        {
+            countdownText.text = string.Format("READY...", (int)second);
+            return false;
+        }
+        else if (second < 2 && second > 1.5)
+        {
+            countdownText.text = "START!";
+            return false;
+        }
+        else if (second <= 1.5)
+        {
+            countdownText.gameObject.SetActive(false);
+            return true;
+        }
+        return false;
     }
 }

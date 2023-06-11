@@ -6,8 +6,9 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    public AudioSource hitSFX;
+    public AudioSource hitSFX, missSFX;
 
+    public PersonaController persona;
     public UIManager uiObject;
 
     public int totalNotes, notesSpawned, currentNote;
@@ -81,14 +82,8 @@ public class ScoreManager : MonoBehaviour
 
     public void NoteHit(int accuracy)
     {
-        if (accuracy != 2) // combo only counts with perfect and great
-        {
-            currentCombo++;
-        } 
-        else
-        {
-            currentCombo = 0;
-        }
+        currentCombo++;
+        persona.UpdatePersonaCombo(currentCombo);
 
         comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 15 :
                (currentCombo >= 16 && currentCombo < 41) ? 30 :
@@ -113,6 +108,8 @@ public class ScoreManager : MonoBehaviour
         }
 
         currentCombo = 0;
+        persona.PlayPersonaMiss();
+        Instance.missSFX.Play();
 
         currentScore += accuracyPoints[3];
         accuracyCounter[3]++;
