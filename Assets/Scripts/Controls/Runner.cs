@@ -74,7 +74,11 @@ public class Runner : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y <= outOfBounds) Destroy(this.gameObject);
+        if (transform.position.y <= outOfBounds)
+        {
+            rb.velocity = new Vector2(0, 0);
+            transform.position = new Vector3(3, outOfBounds * -1, 0);
+        }
 
         if (isGrounded())
         {

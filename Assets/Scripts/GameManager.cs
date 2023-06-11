@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         currentTime = countdownTime + 1;
-        uiObject.ShowInGameScreen();
         GameManager.StartGame?.Invoke();
     }
 
@@ -30,7 +29,11 @@ public class GameManager : MonoBehaviour
         if (!isGameRunning && currentTime>0)
         {
             currentTime -= 1 * Time.deltaTime;
-            if (uiObject.SongCountdown(currentTime)) isGameRunning = true;
+            if (uiObject.SongCountdown(currentTime))
+            {
+                uiObject.ShowInGameScreen();
+                isGameRunning = true;
+            }
         }
 
         if (isGameRunning)

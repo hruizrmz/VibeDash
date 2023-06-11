@@ -37,7 +37,7 @@ public class Ground : MonoBehaviour
             boxCol = GetComponent<BoxCollider2D>();
             groundHeight = transform.position.y + boxCol.bounds.extents.y;
         }
-        else
+        else if ((GetComponent<EdgeCollider2D>() != null))
         {
             edgeCol = GetComponent<EdgeCollider2D>();
             groundHeight = transform.position.y + edgeCol.bounds.extents.y;

@@ -5,7 +5,6 @@ using UnityEngine;
 public class PersonaController : MonoBehaviour
 {
     private Animator personaAnimator;
-    private int playerCombo;
 
     #region Events
     private void OnEnable()
@@ -18,14 +17,13 @@ public class PersonaController : MonoBehaviour
     }
     private void StopPersona()
     {
-        personaAnimator.enabled = false;
+        personaAnimator.SetBool("playerIdle", true);
     }
     #endregion
 
     void Start()
     {
         personaAnimator = GetComponent<Animator>();
-        playerCombo = personaAnimator.GetInteger("playerCombo");
     }
 
     public void PlayPersonaMiss()
@@ -35,6 +33,6 @@ public class PersonaController : MonoBehaviour
 
     public void UpdatePersonaCombo(int scoreCombo)
     {
-        playerCombo = scoreCombo;
+        personaAnimator.SetInteger("playerCombo", scoreCombo);
     }
 }
