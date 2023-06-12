@@ -91,7 +91,7 @@ public class Runner : MonoBehaviour
                         anim.SetBool("isJumping", true);
                         GetComponent<Rigidbody2D>().gravityScale = 2.5f;
                         jumpVel = 8f;
-                        rb.velocity = new Vector2(rb.velocity.x, jumpVel);
+                        rb.velocity = new Vector2(0, jumpVel);
                         jumpInput = false;
                     }
                     else if (longJumpInput)

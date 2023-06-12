@@ -7,13 +7,11 @@ public class Obstacle : MonoBehaviour
     private void OnEnable()
     {
         NoteObject.SwipeRightNote += BreakObstacle;
-        NoteObject.ObstacleMissed += TripPlayer;
     }
 
     private void OnDisable()
     {
         NoteObject.SwipeRightNote -= BreakObstacle;
-        NoteObject.ObstacleMissed -= TripPlayer;
     }
     
     private void Start()
@@ -24,11 +22,6 @@ public class Obstacle : MonoBehaviour
     private void BreakObstacle()
     {
         anim.SetTrigger("breakObstacle");
-    }
-
-    private void TripPlayer()
-    {
-        anim.SetTrigger("tripPlayer");
     }
 
     private void DestroyObstacleObject()

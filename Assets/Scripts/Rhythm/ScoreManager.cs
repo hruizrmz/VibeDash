@@ -11,6 +11,9 @@ public class ScoreManager : MonoBehaviour
     public PersonaController persona;
     public UIManager uiObject;
 
+    public GameObject particleEffect;
+    public Vector3 particleSpawnPosition;
+
     public int totalNotes, notesSpawned, currentNote;
 
     private int currentScore;
@@ -84,6 +87,7 @@ public class ScoreManager : MonoBehaviour
     {
         currentCombo++;
         persona.UpdatePersonaCombo(currentCombo);
+        Instantiate(particleEffect, particleSpawnPosition, Quaternion.identity);
 
         comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 15 :
                (currentCombo >= 16 && currentCombo < 41) ? 30 :

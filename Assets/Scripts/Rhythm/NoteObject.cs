@@ -94,6 +94,12 @@ public class NoteObject : MonoBehaviour
 
     private void Start()
     {
+        if (noteType != 5) // so runner doesn't crash with notes while respawning
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            Physics2D.IgnoreCollision(player.GetComponent<CapsuleCollider2D>(), GetComponent<CircleCollider2D>());
+        }
+
         // for the runner animations
         noteTypeActions.Add(0, TapNote);
         noteTypeActions.Add(1, HoldNote);
@@ -133,7 +139,7 @@ public class NoteObject : MonoBehaviour
                 GetComponent<SpriteRenderer>().enabled = true;
                 spriteDisabled = false;
             }
-            /*
+
             if (transform.localPosition.x <= centerPos)
             {
                 isThereTouch = true;
@@ -142,7 +148,6 @@ public class NoteObject : MonoBehaviour
                 isThereSwipeD = true;
                 isThereHold = false;
             }
-            */
         }
 
         if (canBeTapped)
@@ -151,7 +156,7 @@ public class NoteObject : MonoBehaviour
             {
                 wasNoteHit = true;
             }
-            else if (noteType == 1 && isThereTouch) // hold notes don't add points until the end
+            else if (noteType == 1 && isThereTouch)
             {
                 ScoreManager.Instance.PlayHitSound();
                 wasNoteHit = true;
@@ -172,7 +177,7 @@ public class NoteObject : MonoBehaviour
             {
                 wasNoteHit = true;
             }
-            else if (noteType == 6 && !isThereHold) // hold was released
+            else if (noteType == 6 && !isThereHold)
             {
                 wasNoteHit = true;
                 safeToEndHold = false;
@@ -224,12 +229,12 @@ public class NoteObject : MonoBehaviour
         if (collision.tag == "Activator")
         {
             canBeTapped = false;
-            if (!wasNoteHit)  // if the note exited with no tap
+            if (!wasNoteHit)
             {
                 ScoreManager.Instance.currentNote++;
                 ScoreManager.Instance.NoteMissed();
                 if (noteType == 6) safeToEndHold = false;
-                if (noteType == 4) ObstacleMissed?.Invoke(); // if punch was missed, obstacle trips player
+                if (noteType == 4) ObstacleMissed?.Invoke();
                 if (noteType == 1) HoldMissed?.Invoke();
                 Destroy(gameObject);
             }
