@@ -113,6 +113,7 @@ public class ScoreManager : MonoBehaviour
 
         currentCombo = 0;
         persona.PlayPersonaMiss();
+        persona.UpdatePersonaCombo(currentCombo);
         Instance.missSFX.Play();
 
         currentScore += accuracyPoints[3];
