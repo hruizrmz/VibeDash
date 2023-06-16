@@ -50,8 +50,12 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        currentScore = currentCombo = maxCombo = 0;
         Instance = this;
+    }
+
+    private void Awake()
+    {
+        currentScore = currentCombo = maxCombo = 0;
     }
 
     private void CalculateResults()
@@ -89,11 +93,11 @@ public class ScoreManager : MonoBehaviour
         persona.UpdatePersonaCombo(currentCombo);
         Instantiate(particleEffect, particleSpawnPosition, Quaternion.identity);
 
-        comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 15 :
-               (currentCombo >= 16 && currentCombo < 41) ? 30 :
-               (currentCombo >= 41 && currentCombo < 71) ? 60 :
+        comboPoints = (currentCombo >= 2 && currentCombo < 16) ? 25 :
+               (currentCombo >= 16 && currentCombo < 41) ? 50 :
+               (currentCombo >= 41 && currentCombo < 71) ? 75 :
                (currentCombo >= 71 && currentCombo < 100) ? 100 :
-               (currentCombo >= 101) ? 120 : 0;
+               (currentCombo >= 101) ? 150 : 0;
         currentScore += comboPoints;
 
         currentScore += accuracyPoints[accuracy];
@@ -126,5 +130,10 @@ public class ScoreManager : MonoBehaviour
     public void PlayHitSound()
     {
         Instance.hitSFX.Play();
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(ScoreManager.Instance);
     }
 }

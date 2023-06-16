@@ -19,8 +19,11 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public UIManager uiObject;
 
-    void Start()
+    private void Start()
     {
+        Instance = this;
+        Time.timeScale = 1.0f;
+        isGameRunning = false;
         currentTime = countdownTime + 1;
         GameManager.StartGame?.Invoke();
     }
@@ -71,5 +74,10 @@ public class GameManager : MonoBehaviour
     private void OnApplicationPause(bool pause)
     {
         if (pause) PauseGameFunction();
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(GameManager.Instance);
     }
 }

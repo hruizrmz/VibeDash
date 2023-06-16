@@ -42,10 +42,6 @@ public class Runner : MonoBehaviour
     {
         isGameRunning = true;
     }
-    private void PauseRunner()
-    {
-        isGameRunning = false;
-    }
     private void StopRunner()
     {
         Destroy(gameObject);
@@ -68,7 +64,7 @@ public class Runner : MonoBehaviour
     }
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent <Animator>();

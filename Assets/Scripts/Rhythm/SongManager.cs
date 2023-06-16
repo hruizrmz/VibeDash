@@ -69,6 +69,7 @@ public class SongManager : MonoBehaviour
     public void StartPlayback()
     {
         audioSource.Play();
+        isSongPlaying = true;
         isGameRunning = true;
     }
 
@@ -116,5 +117,10 @@ public class SongManager : MonoBehaviour
                 isSongPlaying = false;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(ScoreManager.Instance);
     }
 }

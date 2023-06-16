@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
+        countdownText.gameObject.SetActive(true);
         inGameScreen.SetActive(false);
         resultsScreen.SetActive(false);
     }

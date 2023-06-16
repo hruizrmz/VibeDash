@@ -19,7 +19,7 @@ public class Obstacle : MonoBehaviour
         ResetPlayerHit -= DisablePlayerHit;
     }
     
-    private void Start()
+    private void Awake()
     {
         anim = GetComponent<Animator>();
     }

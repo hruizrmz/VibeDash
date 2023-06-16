@@ -139,15 +139,6 @@ public class NoteObject : MonoBehaviour
                 GetComponent<SpriteRenderer>().enabled = true;
                 spriteDisabled = false;
             }
-
-            if (transform.localPosition.x <= centerPos)
-            {
-                isThereTouch = true;
-                isThereSwipeU = true;
-                isThereSwipeR = true;
-                isThereSwipeD = true;
-                isThereHold = false;
-            }
         }
 
         if (canBeTapped)
@@ -161,7 +152,7 @@ public class NoteObject : MonoBehaviour
                 ScoreManager.Instance.PlayHitSound();
                 wasNoteHit = true;
                 HoldStarted?.Invoke();
-                noteTypeActions[noteType]?.Invoke();
+                // noteTypeActions[noteType]?.Invoke();
                 Destroy(gameObject);
                 return;
             }
@@ -208,8 +199,6 @@ public class NoteObject : MonoBehaviour
                     ScoreManager.Instance.NoteHit(0);
                 }
 
-                if (noteType != 6) noteTypeActions[noteType]?.Invoke();
-
                 Destroy(gameObject);
             }
         }
@@ -226,6 +215,7 @@ public class NoteObject : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (noteType != 5 && noteType != 6) noteTypeActions[noteType]?.Invoke();
         if (collision.tag == "Activator")
         {
             canBeTapped = false;
