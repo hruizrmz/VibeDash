@@ -17,9 +17,9 @@ public class NoteObject : MonoBehaviour
     public static event Action TapNote, HoldNote, SwipeUpNote, SwipeDownNote, SwipeRightNote, HoldStarted, HoldMissed, ObstacleMissed;
     private readonly Dictionary<int, Action> noteTypeActions = new Dictionary<int, Action>();
 
-    private readonly float finePos = 1.2f;
-    private readonly float greatPos = 0.6f;
-    private readonly float perfectPos = 0.3f;
+    private readonly float finePos = 1.4f;
+    private readonly float greatPos = 0.9f;
+    private readonly float perfectPos = 0.4f;
     private readonly float centerPos = -2.04f;
     private float posDifference;
 
@@ -49,10 +49,7 @@ public class NoteObject : MonoBehaviour
     }
     private void DeleteHoldNote() // for when a hold note is never started
     {
-        if (noteID == (ScoreManager.Instance.currentNote-1)) {
-            wasNoteHit = true;
-            Destroy(gameObject);
-        }
+        if (noteID == (ScoreManager.Instance.currentNote - 1)) Destroy(gameObject);
     }
     private void TouchStarted()
     {
@@ -76,13 +73,8 @@ public class NoteObject : MonoBehaviour
                 {
                     ScoreManager.Instance.currentNote++;
                     ScoreManager.Instance.NoteMissed();
-                    wasNoteHit = true;
-                    Destroy(gameObject);
+                    HoldMissed?.Invoke();
                 }
-            }
-            else if (noteType == 5)
-            {
-                Destroy(gameObject);
             }
         }
     }
@@ -102,6 +94,12 @@ public class NoteObject : MonoBehaviour
 
     private void Start()
     {
+        if (noteType != 5) // so runner doesn't crash with notes while respawning
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            Physics2D.IgnoreCollision(player.GetComponent<CapsuleCollider2D>(), GetComponent<CircleCollider2D>());
+        }
+
         // for the runner animations
         noteTypeActions.Add(0, TapNote);
         noteTypeActions.Add(1, HoldNote);
@@ -149,12 +147,12 @@ public class NoteObject : MonoBehaviour
             {
                 wasNoteHit = true;
             }
-            else if (noteType == 1 && isThereTouch) // hold notes don't add points until the end
+            else if (noteType == 1 && isThereTouch)
             {
                 ScoreManager.Instance.PlayHitSound();
                 wasNoteHit = true;
                 HoldStarted?.Invoke();
-                noteTypeActions[noteType]?.Invoke();
+                // noteTypeActions[noteType]?.Invoke();
                 Destroy(gameObject);
                 return;
             }
@@ -170,7 +168,7 @@ public class NoteObject : MonoBehaviour
             {
                 wasNoteHit = true;
             }
-            else if (noteType == 6 && !isThereHold) // hold was released
+            else if (noteType == 6 && !isThereHold)
             {
                 wasNoteHit = true;
                 safeToEndHold = false;
@@ -201,8 +199,6 @@ public class NoteObject : MonoBehaviour
                     ScoreManager.Instance.NoteHit(0);
                 }
 
-                if (noteType != 6) noteTypeActions[noteType]?.Invoke();
-
                 Destroy(gameObject);
             }
         }
@@ -219,15 +215,16 @@ public class NoteObject : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (noteType != 5 && noteType != 6) noteTypeActions[noteType]?.Invoke();
         if (collision.tag == "Activator")
         {
             canBeTapped = false;
-            if (!wasNoteHit)  // if the note exited with no tap
+            if (!wasNoteHit)
             {
                 ScoreManager.Instance.currentNote++;
                 ScoreManager.Instance.NoteMissed();
                 if (noteType == 6) safeToEndHold = false;
-                if (noteType == 4) ObstacleMissed?.Invoke(); // if punch was missed, obstacle trips player
+                if (noteType == 4) ObstacleMissed?.Invoke();
                 if (noteType == 1) HoldMissed?.Invoke();
                 Destroy(gameObject);
             }

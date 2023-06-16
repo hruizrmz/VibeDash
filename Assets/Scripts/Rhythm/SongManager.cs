@@ -16,6 +16,7 @@ public class SongManager : MonoBehaviour
     public List<double> holdNotesList;
     public float songDelayInSeconds;
 
+    public static MidiFile midiFile;
     public string midiFileLocation;
     public float noteTime; // the player react time from spawn to a perfect hit
     public float noteSpawnX; // where the note spawns
@@ -28,38 +29,54 @@ public class SongManager : MonoBehaviour
         }
     }
 
+    private bool isGameRunning;
+    public bool isSongPlaying;
+
     #region Events
     private void OnEnable()
     {
-        ScoreManager.StartGame += StartSong;
-        ScoreManager.StopGame += StopSong;
+        GameManager.StartGame += StartSong;
+        GameManager.PauseGame += PauseSong;
+        GameManager.UnPauseGame += StartPlayback;
+        GameManager.StopGame += StopSong;
     }
     private void OnDisable()
     {
-        ScoreManager.StartGame -= StartSong;
-        ScoreManager.StartGame -= StopSong;
+        GameManager.StartGame -= StartSong;
+        GameManager.PauseGame -= PauseSong;
+        GameManager.UnPauseGame -= StartPlayback;
+        GameManager.StartGame -= StopSong;
     }
     private void StartSong()
     {
         Invoke(nameof(StartPlayback), songDelayInSeconds);
-    }
-    private void StartPlayback()
-    {
-        audioSource.Play();
+        isGameRunning = isSongPlaying = true;
     }
     private void StopSong()
     {
         audioSource.volume = 0.2f;
+        isGameRunning = false;
     }
     #endregion
-
-    public static MidiFile midiFile;
 
     void Start()
     {
         Instance = this;
         ReadFromFile();
         GetDataFromMidi();
+    }
+
+    public void StartPlayback()
+    {
+        audioSource.Play();
+        isSongPlaying = true;
+        isGameRunning = true;
+    }
+
+    public void PauseSong()
+    {
+        audioSource.Pause();
+        isGameRunning = false;
     }
 
     private void ReadFromFile()
@@ -89,5 +106,21 @@ public class SongManager : MonoBehaviour
     public static double GetAudioSourceTime() // how many seconds the song has been playing for
     {
         return (double)Instance.audioSource.timeSamples / Instance.audioSource.clip.frequency;
+    }
+
+    private void Update()
+    {
+        if (isGameRunning)
+        {
+            if (!audioSource.isPlaying)
+            {
+                isSongPlaying = false;
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(ScoreManager.Instance);
     }
 }

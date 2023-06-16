@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Runner : MonoBehaviour
 {
-    private bool isGameRunning;
+    public bool isGameRunning;
 
     private bool jumpInput, longJumpInput, punchInput, slideInput;
     private float jumpVel = 8f;
@@ -22,7 +22,8 @@ public class Runner : MonoBehaviour
     #region Events
     private void OnEnable()
     {
-        ScoreManager.StartGame += StartRunner;
+        GameManager.StartGame += StartRunner;
+        GameManager.StopGame += StopRunner;
         NoteObject.HoldNote += PlayerLongJump;
         NoteObject.SwipeUpNote += PlayerJump;
         NoteObject.SwipeDownNote += PlayerSlide;
@@ -30,7 +31,8 @@ public class Runner : MonoBehaviour
     }
     private void OnDisable()
     {
-        ScoreManager.StartGame -= StartRunner;
+        GameManager.StartGame -= StartRunner;
+        GameManager.StopGame -= StopRunner;
         NoteObject.HoldNote -= PlayerLongJump;
         NoteObject.SwipeUpNote -= PlayerJump;
         NoteObject.SwipeDownNote -= PlayerSlide;
@@ -39,6 +41,10 @@ public class Runner : MonoBehaviour
     private void StartRunner()
     {
         isGameRunning = true;
+    }
+    private void StopRunner()
+    {
+        Destroy(gameObject);
     }
     private void PlayerJump()
     {
@@ -58,17 +64,20 @@ public class Runner : MonoBehaviour
     }
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent <Animator>();
-        isGameRunning = false;
         jumpInput = longJumpInput = slideInput = punchInput = false;
     }
 
     void Update()
     {
-        if (transform.position.y <= outOfBounds) Destroy(this.gameObject);
+        if (transform.position.y <= outOfBounds)
+        {
+            rb.velocity = new Vector2(0, 0);
+            transform.position = new Vector3(3, outOfBounds * -1, 0);
+        }
 
         if (isGrounded())
         {
@@ -81,7 +90,7 @@ public class Runner : MonoBehaviour
                         anim.SetBool("isJumping", true);
                         GetComponent<Rigidbody2D>().gravityScale = 2.5f;
                         jumpVel = 8f;
-                        rb.velocity = new Vector2(rb.velocity.x, jumpVel);
+                        rb.velocity = new Vector2(0, jumpVel);
                         jumpInput = false;
                     }
                     else if (longJumpInput)
@@ -105,6 +114,7 @@ public class Runner : MonoBehaviour
                     else if (isGameRunning && !anim.GetBool("isRunning"))
                     {
                         anim.SetBool("isRunning", true);
+                        anim.SetBool("isFalling", false);
                     }
                 }
                 anim.SetBool("isFalling", false);

@@ -22,12 +22,12 @@ public class Lane : MonoBehaviour
     #region Events
     private void OnEnable()
     {
-        ScoreManager.StopGame += StopSong;
+        GameManager.StopGame += StopSong;
         InputManager.HoldEnded += HoldEnded;
     }
     private void OnDisable()
     {
-        ScoreManager.StopGame -= StopSong;
+        GameManager.StopGame -= StopSong;
         InputManager.HoldEnded -= HoldEnded;
     }
     private void StopSong()
@@ -36,14 +36,9 @@ public class Lane : MonoBehaviour
     }
     private void HoldEnded()
     {
-        if (laneID == 1 && (spawnIndex == indexCurrentlySpawning)) holdingStopped = true;
+        if (laneID == 1 && (spawnIndex == indexCurrentlySpawning) && (isSpawning)) holdingStopped = true;
     }
     #endregion
-
-    public void Start()
-    {
-        gameObject.SetActive(false);
-    }
 
     public void SetTimeStamps(Melanchall.DryWetMidi.Interaction.Note[] array)
     {
@@ -51,7 +46,7 @@ public class Lane : MonoBehaviour
         {
             if (note.NoteName == noteRestriction)
             {
-                var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan> (note.Time, SongManager.midiFile.GetTempoMap());
+                var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.midiFile.GetTempoMap());
                 timeStamps.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
             }
         }
@@ -62,7 +57,9 @@ public class Lane : MonoBehaviour
         if (spawnIndex < timeStamps.Count) // until we go through all the notes in the lane
         {
             if (SongManager.GetAudioSourceTime() >= timeStamps[spawnIndex] - SongManager.Instance.noteTime)
-            { 
+            {
+                ScoreManager.Instance.notesSpawned++;
+
                 var note = Instantiate(notePrefab, transform);
                 notes.Add(note.GetComponent<NoteObject>());
                 note.GetComponent<NoteObject>().assignedTime = (float)timeStamps[spawnIndex];
@@ -74,8 +71,6 @@ public class Lane : MonoBehaviour
                 }
 
                 spawnIndex++;
-
-                ScoreManager.Instance.notesSpawned++;
             }
         }
     }
@@ -87,7 +82,7 @@ public class Lane : MonoBehaviour
         double assignedTime, lastAssignedTime = 0;
         while (isSpawning)
         {
-            if (spawnLength < SongManager.Instance.noteTime) holdingStopped = false;
+            if ((spawnLength < SongManager.Instance.noteTime) && (index != indexCurrentlySpawning)) holdingStopped = false;
             if (!holdingStopped)
             {
                 if (spawnLength < noteLength)
@@ -111,10 +106,10 @@ public class Lane : MonoBehaviour
             else
             {
                 isSpawning = false;
-                holdingStopped = false;
             }
             yield return null;
         }
+        holdingStopped = false;
         indexCurrentlySpawning++;
     }
 }
