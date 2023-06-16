@@ -3,7 +3,7 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject inGameScreen;
+    public GameObject inGameScreen, pauseScreen;
     public GameObject noteLanes;
 
     public TextMeshProUGUI countdownText;
@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
 
     public void ShowInGameScreen()
     {
+        pauseScreen.SetActive(false);
+
         inGameScreen.SetActive(true);
         noteLanes.GetComponent<SpriteRenderer>().enabled = true;
         for (int i = 0; i < noteLanes.transform.childCount; i++)
@@ -54,6 +56,19 @@ public class UIManager : MonoBehaviour
         maxComboText.text = string.Format("{0}", maxCombo);
         scoreText.text = score;
         rankText.text = rank;
+    }
+
+    public void ShowPauseScreen()
+    {
+        inGameScreen.SetActive(false);
+        noteLanes.GetComponent<SpriteRenderer>().enabled = false;
+        for (int i = 0; i < noteLanes.transform.childCount; i++)
+        {
+            GameObject child = noteLanes.transform.GetChild(i).gameObject;
+            child.SetActive(false);
+        }
+
+        pauseScreen.SetActive(true);
     }
 
     public bool SongCountdown(float second)

@@ -42,9 +42,12 @@ public class Runner : MonoBehaviour
     {
         isGameRunning = true;
     }
-    private void StopRunner()
+    private void PauseRunner()
     {
         isGameRunning = false;
+    }
+    private void StopRunner()
+    {
         Destroy(gameObject);
     }
     private void PlayerJump()
@@ -115,6 +118,7 @@ public class Runner : MonoBehaviour
                     else if (isGameRunning && !anim.GetBool("isRunning"))
                     {
                         anim.SetBool("isRunning", true);
+                        anim.SetBool("isFalling", false);
                     }
                 }
                 anim.SetBool("isFalling", false);

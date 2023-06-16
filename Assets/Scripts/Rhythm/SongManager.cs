@@ -16,6 +16,7 @@ public class SongManager : MonoBehaviour
     public List<double> holdNotesList;
     public float songDelayInSeconds;
 
+    public static MidiFile midiFile;
     public string midiFileLocation;
     public float noteTime; // the player react time from spawn to a perfect hit
     public float noteSpawnX; // where the note spawns
@@ -35,21 +36,21 @@ public class SongManager : MonoBehaviour
     private void OnEnable()
     {
         GameManager.StartGame += StartSong;
+        GameManager.PauseGame += PauseSong;
+        GameManager.UnPauseGame += StartPlayback;
         GameManager.StopGame += StopSong;
     }
     private void OnDisable()
     {
         GameManager.StartGame -= StartSong;
+        GameManager.PauseGame -= PauseSong;
+        GameManager.UnPauseGame -= StartPlayback;
         GameManager.StartGame -= StopSong;
     }
     private void StartSong()
     {
         Invoke(nameof(StartPlayback), songDelayInSeconds);
         isGameRunning = isSongPlaying = true;
-    }
-    private void StartPlayback()
-    {
-        audioSource.Play();
     }
     private void StopSong()
     {
@@ -58,13 +59,23 @@ public class SongManager : MonoBehaviour
     }
     #endregion
 
-    public static MidiFile midiFile;
-
     void Start()
     {
         Instance = this;
         ReadFromFile();
         GetDataFromMidi();
+    }
+
+    public void StartPlayback()
+    {
+        audioSource.Play();
+        isGameRunning = true;
+    }
+
+    public void PauseSong()
+    {
+        audioSource.Pause();
+        isGameRunning = false;
     }
 
     private void ReadFromFile()
