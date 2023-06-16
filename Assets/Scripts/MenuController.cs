@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneSwitcher : MonoBehaviour
+public class MenuController : MonoBehaviour
 {
     public GameObject creditsScreen;
 
@@ -25,5 +25,10 @@ public class SceneSwitcher : MonoBehaviour
     public void HideCredits()
     {
         creditsScreen.SetActive(false);
+    }
+
+    public void OpenLink(string url)
+    {
+        Application.OpenURL(url);
     }
 }
