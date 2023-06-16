@@ -62,8 +62,7 @@ public class SongManager : MonoBehaviour
     void Start()
     {
         Instance = this;
-        ReadFromFile();
-        GetDataFromMidi();
+        StartCoroutine(ReadFromWebsite());
     }
 
     public void StartPlayback()
@@ -79,9 +78,26 @@ public class SongManager : MonoBehaviour
         isGameRunning = false;
     }
 
-    private void ReadFromFile()
+    private IEnumerator ReadFromWebsite()
     {
-        midiFile = MidiFile.Read(Application.streamingAssetsPath + "/" + midiFileLocation);
+        using (UnityWebRequest www = UnityWebRequest.Get(Application.streamingAssetsPath + "/" + midiFileLocation))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.ProtocolError || www.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.LogError(www.error);
+            }
+            else
+            {
+                byte[] results = www.downloadHandler.data;
+                using (var stream = new MemoryStream(results))
+                {
+                    midiFile = MidiFile.Read(stream);
+                    GetDataFromMidi();
+                }
+            }
+        }
     }
 
     private void GetDataFromMidi()
@@ -94,7 +110,8 @@ public class SongManager : MonoBehaviour
 
         foreach (var note in notesArray)
         {
-            if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.E) { // the note restriction for the hold lane is E
+            if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.E)
+            { // the note restriction for the hold lane is E
                 double noteLength = ((TimeSpan)note.LengthAs<MetricTimeSpan>(SongManager.midiFile.GetTempoMap())).TotalSeconds;
                 holdNotesList.Add(noteLength);
             }
