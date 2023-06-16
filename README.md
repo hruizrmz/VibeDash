@@ -2,7 +2,7 @@
 
 ![the person who ran next to your car when you were a child.](https://64.media.tumblr.com/72114626f49a60a82ef18aa9ad867d02/1bc5e5e470c857b2-e2/s1280x1920/84fd653c85cc134db1564a2b8839ea6c7788c8a4.jpg)
 
-By: Eduardo Valdés-Hevia (valdevia)
+Image By: Eduardo Valdés-Hevia ([valdevia](https://valdevia.tumblr.com/post/700380422751846400/the-person-who-ran-next-to-your-car-when-you-were))
 
 **Description:** My Mobile Game Workshop project, developed over a month in Unity. [Play it on itchio now!](https://renasonas.itch.io/vibe-dash)
 
