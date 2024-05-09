@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlatformController : MonoBehaviour
 {
     [SerializeField] private float scrollSpeed;
-    private bool isGameRunning;
+    public bool isGameRunning;
 
     #region Events
     private void OnEnable()

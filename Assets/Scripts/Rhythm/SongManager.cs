@@ -35,26 +35,25 @@ public class SongManager : MonoBehaviour
     #region Events
     private void OnEnable()
     {
-        GameManager.StartGame += StartSong;
+        //GameManager.StartGame += StartSong;
         GameManager.PauseGame += PauseSong;
         GameManager.UnPauseGame += StartPlayback;
         GameManager.StopGame += StopSong;
     }
     private void OnDisable()
     {
-        GameManager.StartGame -= StartSong;
+        //GameManager.StartGame -= StartSong;
         GameManager.PauseGame -= PauseSong;
         GameManager.UnPauseGame -= StartPlayback;
         GameManager.StartGame -= StopSong;
     }
-    private void StartSong()
-    {
-        Invoke(nameof(StartPlayback), songDelayInSeconds);
-        isGameRunning = isSongPlaying = true;
-    }
+    //private void StartSong()
+    //{
+    //    Invoke(nameof(StartPlayback), songDelayInSeconds);
+    //}
     private void StopSong()
     {
-        audioSource.volume = 0.2f;
+        //audioSource.volume = 0.2f;
         isGameRunning = false;
     }
     #endregion
@@ -63,10 +62,12 @@ public class SongManager : MonoBehaviour
     {
         Instance = this;
         StartCoroutine(ReadFromWebsite());
+        Invoke(nameof(StartPlayback), songDelayInSeconds);
     }
 
     public void StartPlayback()
     {
+        GameManager.Instance.CallGameStart();
         audioSource.Play();
         isSongPlaying = true;
         isGameRunning = true;

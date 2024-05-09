@@ -24,8 +24,13 @@ public class GameManager : MonoBehaviour
         Instance = this;
         Time.timeScale = 1.0f;
         isGameRunning = false;
+        currentTime = 0;
+        //GameManager.StartGame?.Invoke();
+    }
+
+    public void CallGameStart()
+    {
         currentTime = countdownTime + 1;
-        GameManager.StartGame?.Invoke();
     }
 
     void Update()
@@ -37,6 +42,7 @@ public class GameManager : MonoBehaviour
             {
                 uiObject.ShowInGameScreen();
                 isGameRunning = true;
+                GameManager.StartGame?.Invoke();
             }
         }
 
